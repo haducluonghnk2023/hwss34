@@ -21,10 +21,11 @@ export default function AddStudent() {
     const [showForm,setShowForm] = React.useState<boolean>(false)
     const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
     const [successMessage, setSuccessMessage] = React.useState<string>("");
-    const [showBlockModal, setShowBlockModal] = React.useState<boolean>(false); // Trạng thái của modal chặn
-    const [blockStudentId, setBlockStudentId] = React.useState<number | null>(null); // ID của sinh viên cần chặn
-    const [searchTerm, setSearchTerm] = React.useState<string>("");
-    const [sortOrder, setSortOrder] = React.useState<string>("");
+    // const [showBlockModal, setShowBlockModal] = React.useState<boolean>(false); // Trạng thái của modal chặn
+    // const [blockStudentId, setBlockStudentId] = React.useState<number | null>(null); // ID của sinh viên cần chặn
+    // const [searchTerm, setSearchTerm] = React.useState<string>("");
+    // const [sortOrder, setSortOrder] = React.useState<string>("");
+    //hàm lấy danh sách sinh viên từ local
     useEffect(() => {
         const savedStudents = localStorage.getItem("students");
         if (savedStudents) {
@@ -50,6 +51,7 @@ export default function AddStudent() {
             [name]: value
         }));
     };
+    // hàm validate dữ liệu form
     const validate = () => {
         const newErrors: { [key: string]: string } = {};
         if (!student.id) newErrors.id = "Mã sinh viên không được để trống";
@@ -69,6 +71,7 @@ export default function AddStudent() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+    // hàm tạo sinh viên
     const handleAddStudent = () => {
         if (validate()) {
             const updatedStudents = [...students, student];
@@ -90,7 +93,7 @@ export default function AddStudent() {
             }, 1000);
         }
     };
-    
+    // hàm xóa sinh viên
     const handleDeleteStudent = (id: number) => {
         const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa sinh viên này không?");
         if (confirmDelete) {
@@ -100,30 +103,31 @@ export default function AddStudent() {
             setFilteredStudents(updatedStudents);
         }
     };
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = e.target;
-        setSearchTerm(value);
-        filterStudents(value, sortOrder);
-    };
-    const handleSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const { value } = e.target;
-        setSortOrder(value);
-        filterStudents(searchTerm, value);
-    };
-    const filterStudents = (searchTerm: string, sortOrder: string) => {
-        let filtered = students.filter(student => 
-            student.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-            student.email.toLowerCase().includes(searchTerm.toLowerCase())
-        );
 
-        if (sortOrder === "asc") {
-            filtered.sort((a, b) => new Date(a.dateOfBirth).getTime() - new Date(b.dateOfBirth).getTime());
-        } else if (sortOrder === "desc") {
-            filtered.sort((a, b) => new Date(b.dateOfBirth).getTime() - new Date(a.dateOfBirth).getTime());
-        }
+    // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const { value } = e.target;
+    //     setSearchTerm(value);
+    //     filterStudents(value, sortOrder);
+    // };
+    // const handleSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    //     const { value } = e.target;
+    //     setSortOrder(value);
+    //     filterStudents(searchTerm, value);
+    // };
+    // const filterStudents = (searchTerm: string, sortOrder: string) => {
+    //     let filtered = students.filter(student => 
+    //         student.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    //         student.email.toLowerCase().includes(searchTerm.toLowerCase())
+    //     );
 
-        setFilteredStudents(filtered);
-    };
+    //     if (sortOrder === "asc") {
+    //         filtered.sort((a, b) => new Date(a.dateOfBirth).getTime() - new Date(b.dateOfBirth).getTime());
+    //     } else if (sortOrder === "desc") {
+    //         filtered.sort((a, b) => new Date(b.dateOfBirth).getTime() - new Date(a.dateOfBirth).getTime());
+    //     }
+
+    //     setFilteredStudents(filtered);
+    // };
     
     // const openBlockModal = (id: number) => {
     //     setBlockStudentId(id);
@@ -186,16 +190,16 @@ export default function AddStudent() {
                     </div>
                 
             )}
-               {showBlockModal && (
+               {/* {showBlockModal && (
                 <div className="modal-overlay">
                     <div className="modal">
-                        {/* <div className="form-actions">
+                        <div className="form-actions">
                             <button onClick={handleBlockStudent}>Chặn</button>
                             <button onClick={closeBlockModal}>Hủy</button>
-                        </div> */}
+                        </div>
                     </div>
                 </div>
-            )}
+            )} */}
                {successMessage && (
                 <div className="success-overlay">
                     <div className="success-modal">
@@ -207,11 +211,11 @@ export default function AddStudent() {
                     <input 
                         type="text" 
                         placeholder="Tìm kiếm sinh viên..." 
-                        value={searchTerm}  
-                        onChange={handleSearch} 
+                        // value={searchTerm}  
+                        // onChange={handleSearch} 
                         className="search-input"
                     />
-                    <select value={sortOrder} onChange={handleSort} className="sort-select">
+                    <select className="sort-select">
                         <option value="">Sắp xếp theo tuổi</option>
                         <option value="asc">Tăng dần</option>
                         <option value="desc">Giảm dần</option>
